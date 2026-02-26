@@ -21,7 +21,7 @@
 const SUPABASE_URL  = 'https://edwzvjzpmhflzjnoibor.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkd3p2anpwbWhmbHpqbm9pYm9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU0NTE1NzIsImV4cCI6MjA2MTAyNzU3Mn0.Ro_MFRoJvbVMNqBBEzSm6Y9P5JOsEqM5rELM4rnMcMk';
 // FastAPI backend — add /chat endpoint (see instructions below)
-const API_ENDPOINT  = 'https://YOUR_FASTAPI_BACKEND/chat';
+const API_ENDPOINT  = 'https://neon-assessment-api-244069100291.us-central1.run.app/chat';
 
 // ── Color definitions (matches your 12-color system) ──
 const COLOR_MAP = {

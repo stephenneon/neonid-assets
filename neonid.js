@@ -131,7 +131,7 @@ async function loadProfile() {
           emotionality:      toPercent(ps.emotionality)
         },
         earnings:    data.databank_earnings || 0,
-        submittedAt: data.submitted_at
+        submittedAt: data.created_at
       };
     } else {
       loadDemoProfile();

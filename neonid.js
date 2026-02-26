@@ -19,7 +19,7 @@
 // CONFIGURATION — Replace with your values
 // ══════════════════════════════════════════
 const SUPABASE_URL  = 'https://edwzvjzpmhflzjnoibor.supabase.co';
-const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVkd3p2anpwbWhmbHpqbm9pYm9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzNjU2ODcsImV4cCI6MjA4MDk0MTY4N30.WLLdQYiQ0EHLLARyp4nAVW57lP_E8lq_ZlhyfcQicxI';
+const SUPABASE_ANON = 'sb_publishable_FogbhAzojyu-pXSU0jTRcA_sKtSlKCJ';
 // FastAPI backend — add /chat endpoint (see instructions below)
 const API_ENDPOINT  = 'https://neon-assessment-api-244069100291.us-central1.run.app/chat';
 

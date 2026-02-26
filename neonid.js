@@ -312,28 +312,39 @@ function getTraitWord(colorIdx, wordIdx) {
 function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
 
 function neonRing(sz, colors, initial) {
-  const r = sz * 0.455;
-  const circ = 2 * Math.PI * r;
-  const seg = circ / 3;
-  const gap = seg * 0.18;
-  const dash = seg - gap;
-  const c = colors.map(col => COLOR_MAP[col.name]?.hex || '#ccc');
-  const fs = sz * 0.32;
-  const id = 'ng' + sz + Math.random().toString(36).slice(2,6);
-  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">
-    <defs>
-      <linearGradient id="${id}" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#F4845F"/>
-        <stop offset="45%" stop-color="#D4388A"/>
-        <stop offset="100%" stop-color="#8B2FC9"/>
-      </linearGradient>
-    </defs>
-    <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${c[0]}" stroke-width="${sz*0.072}" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="0" stroke-linecap="round"/>
-    <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${c[1]}" stroke-width="${sz*0.072}" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-seg}" stroke-linecap="round"/>
-    <circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${c[2]}" stroke-width="${sz*0.072}" stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${-seg*2}" stroke-linecap="round"/>
-    <circle cx="${sz/2}" cy="${sz/2}" r="${r*0.78}" fill="url(#${id})"/>
-    <text x="${sz/2}" y="${sz/2+fs*0.38}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="#fff" font-family="DM Sans,system-ui,sans-serif">${initial}</text>
-  </svg>`;
+  const cx = sz / 2, cy = sz / 2;
+  const outerR = sz * 0.48;
+  const innerR = sz * 0.28;
+  
+  // Use scores if available, otherwise equal thirds
+  const total = colors.reduce((s, c) => s + (c.score || 33), 0);
+  const slices = colors.slice(0, 3).map(c => ({
+    color: COLOR_MAP[c.name]?.hex || '#ccc',
+    pct: (c.score || 33) / total
+  }));
+
+  function polarToCart(cx, cy, r, angle) {
+    return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
+  }
+
+  function slicePath(cx, cy, outerR, innerR, startAngle, endAngle) {
+    const o1 = polarToCart(cx, cy, outerR, startAngle);
+    const o2 = polarToCart(cx, cy, outerR, endAngle);
+    const i1 = polarToCart(cx, cy, innerR, endAngle);
+    const i2 = polarToCart(cx, cy, innerR, startAngle);
+    const large = endAngle - startAngle > Math.PI ? 1 : 0;
+    return `M ${o1[0]} ${o1[1]} A ${outerR} ${outerR} 0 ${large} 1 ${o2[0]} ${o2[1]} L ${i1[0]} ${i1[1]} A ${innerR} ${innerR} 0 ${large} 0 ${i2[0]} ${i2[1]} Z`;
+  }
+
+  let startAngle = -Math.PI / 2;
+  let paths = '';
+  slices.forEach(slice => {
+    const endAngle = startAngle + slice.pct * 2 * Math.PI;
+    paths += `<path d="${slicePath(cx, cy, outerR, innerR, startAngle, endAngle)}" fill="${slice.color}"/>`;
+    startAngle = endAngle;
+  });
+
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">${paths}</svg>`;
 }
 
 // ══════════════════════════════════════════

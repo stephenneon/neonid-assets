@@ -314,37 +314,25 @@ function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
 function neonRing(sz, colors, initial) {
   const cx = sz / 2, cy = sz / 2;
   const outerR = sz * 0.48;
-  const innerR = sz * 0.28;
+  const innerR = sz * 0.29;
+  const slices = colors.slice(0, 3).map(c => COLOR_MAP[c.name]?.hex || '#ccc');
   
-  // Use scores if available, otherwise equal thirds
-  const total = colors.reduce((s, c) => s + (c.score || 33), 0);
-  const slices = colors.slice(0, 3).map(c => ({
-    color: COLOR_MAP[c.name]?.hex || '#ccc',
-    pct: (c.score || 33) / total
-  }));
-
-  function polarToCart(cx, cy, r, angle) {
-    return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
+  function arc(startDeg, endDeg, color) {
+    const s = (startDeg - 90) * Math.PI / 180;
+    const e = (endDeg - 90) * Math.PI / 180;
+    const x1 = cx + outerR * Math.cos(s), y1 = cy + outerR * Math.sin(s);
+    const x2 = cx + outerR * Math.cos(e), y2 = cy + outerR * Math.sin(e);
+    const ix1 = cx + innerR * Math.cos(e), iy1 = cy + innerR * Math.sin(e);
+    const ix2 = cx + innerR * Math.cos(s), iy2 = cy + innerR * Math.sin(s);
+    const large = (endDeg - startDeg) > 180 ? 1 : 0;
+    return `<path d="M${x1},${y1} A${outerR},${outerR} 0 ${large} 1 ${x2},${y2} L${ix1},${iy1} A${innerR},${innerR} 0 ${large} 0 ${ix2},${iy2} Z" fill="${color}"/>`;
   }
 
-  function slicePath(cx, cy, outerR, innerR, startAngle, endAngle) {
-    const o1 = polarToCart(cx, cy, outerR, startAngle);
-    const o2 = polarToCart(cx, cy, outerR, endAngle);
-    const i1 = polarToCart(cx, cy, innerR, endAngle);
-    const i2 = polarToCart(cx, cy, innerR, startAngle);
-    const large = endAngle - startAngle > Math.PI ? 1 : 0;
-    return `M ${o1[0]} ${o1[1]} A ${outerR} ${outerR} 0 ${large} 1 ${o2[0]} ${o2[1]} L ${i1[0]} ${i1[1]} A ${innerR} ${innerR} 0 ${large} 0 ${i2[0]} ${i2[1]} Z`;
-  }
-
-  let startAngle = -Math.PI / 2;
-  let paths = '';
-  slices.forEach(slice => {
-    const endAngle = startAngle + slice.pct * 2 * Math.PI;
-    paths += `<path d="${slicePath(cx, cy, outerR, innerR, startAngle, endAngle)}" fill="${slice.color}"/>`;
-    startAngle = endAngle;
-  });
-
-  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">${paths}</svg>`;
+  return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">
+    ${arc(0, 120, slices[0])}
+    ${arc(120, 240, slices[1])}
+    ${arc(240, 360, slices[2])}
+  </svg>`;
 }
 
 // ══════════════════════════════════════════

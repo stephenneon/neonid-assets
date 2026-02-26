@@ -314,9 +314,9 @@ function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
 function neonRing(sz, colors, initial) {
   const cx = sz / 2, cy = sz / 2;
   const outerR = sz * 0.48;
-  const innerR = sz * 0.29;
-  const slices = colors.slice(0, 3).map(c => COLOR_MAP[c.name]?.hex || '#ccc');
-  
+  const innerR = sz * 0.30;
+  const c = colors.slice(0, 3).map(c => COLOR_MAP[c.name]?.hex || '#ccc');
+
   function arc(startDeg, endDeg, color) {
     const s = (startDeg - 90) * Math.PI / 180;
     const e = (endDeg - 90) * Math.PI / 180;
@@ -329,9 +329,9 @@ function neonRing(sz, colors, initial) {
   }
 
   return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}">
-    ${arc(0, 120, slices[0])}
-    ${arc(120, 240, slices[1])}
-    ${arc(240, 360, slices[2])}
+    ${arc(0, 240, c[1])}
+    ${arc(240, 360, c[2])}
+    <circle cx="${cx}" cy="${cy}" r="${innerR}" fill="${c[0]}"/>
   </svg>`;
 }
 

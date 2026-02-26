@@ -96,7 +96,7 @@ async function loadProfile() {
       .from('typeform_submissions')
       .select('*')
       .eq('user_id', USER.id)
-      .order('submitted_at', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(1)
       .single();
 

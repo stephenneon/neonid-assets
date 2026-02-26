@@ -50,7 +50,9 @@ const HEXACO_TRAITS = [
 ];
 
 // ── State ──
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: { storageKey: 'sb-edwzvjzpmhflzjnoibor-auth-token' }
+});
 let USER = null;
 let PROFILE = null;
 let chatHistory = [];
